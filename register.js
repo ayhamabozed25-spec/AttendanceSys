@@ -1,63 +1,59 @@
-let video = document.getElementById("video");
+let video=document.getElementById("video");
+let captureBtn=document.getElementById("captureBtn");
 
-async function startCamera() {
-  let stream = await navigator.mediaDevices.getUserMedia({ video: true });
-  video.srcObject = stream;
+async function startCamera(){
+  let stream=await navigator.mediaDevices.getUserMedia({video:true});
+  video.srcObject=stream;
 }
 
-let modelsLoaded=false;
-
 async function loadModels(){
+  // روابط CDN موثوقة للنماذج
   await faceapi.nets.tinyFaceDetector.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
   await faceapi.nets.faceLandmark68Net.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
   await faceapi.nets.faceRecognitionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
-  modelsLoaded=true;
+  
+  // تفعيل الزر بعد تحميل النماذج
+  captureBtn.disabled=false;
+  document.getElementById("result").innerText="النماذج جاهزة، يمكنك التقاط بصمة الوجه الآن";
 }
 
 loadModels();
 
-async function captureFace() {
-  const empId = document.getElementById("empId").value;
-  const name = document.getElementById("name").value;
+async function captureFace(){
+  const empId=document.getElementById("empId").value;
+  const name=document.getElementById("name").value;
 
-  if(!modelsLoaded){
-  document.getElementById("result").innerText="الرجاء الانتظار حتى تحميل النماذج";
-  return;
-}
-  
-  if (!empId || !name) {
-    document.getElementById("result").innerText = "أدخل الرقم والاسم";
+  if(!empId || !name){
+    document.getElementById("result").innerText="أدخل الرقم والاسم";
     return;
   }
 
-  // التحقق من الوجه
-  const detection = await faceapi
-    .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+  const detection=await faceapi
+    .detectSingleFace(video,new faceapi.TinyFaceDetectorOptions())
     .withFaceLandmarks()
     .withFaceDescriptor();
 
-  if (!detection) {
-    document.getElementById("result").innerText = "لم يتم التعرف على الوجه";
+  if(!detection){
+    document.getElementById("result").innerText="لم يتم التعرف على الوجه. حاول وضع الوجه أمام الكاميرا بشكل واضح";
     return;
   }
 
-  const faceVector = Array.from(detection.descriptor); // تحويل Float32Array إلى Array
+  const faceVector=Array.from(detection.descriptor);
 
-  // إرسال البيانات للـ Google Script لتخزينها في Employees Sheet
-  const response = await fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      type: "register",
-      employee: empId,
-      name: name,
-      face: faceVector
+  const response=await fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      type:"register",
+      employee:empId,
+      name:name,
+      face:faceVector
     })
   });
 
-  const result = await response.json();
-  if (result.status === "ok") {
-    document.getElementById("result").innerText = "تم تسجيل الموظف بنجاح";
-  } else {
-    document.getElementById("result").innerText = "خطأ: " + result.error;
+  const result=await response.json();
+  if(result.status==="ok"){
+    document.getElementById("result").innerText="تم تسجيل الموظف بنجاح";
+  }else{
+    document.getElementById("result").innerText="خطأ: "+result.error;
   }
 }
