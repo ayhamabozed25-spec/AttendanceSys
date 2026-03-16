@@ -20,6 +20,11 @@ async function captureFace() {
   const empId = document.getElementById("empId").value;
   const name = document.getElementById("name").value;
 
+  if(!modelsLoaded){
+  document.getElementById("result").innerText="الرجاء الانتظار حتى تحميل النماذج";
+  return;
+}
+  
   if (!empId || !name) {
     document.getElementById("result").innerText = "أدخل الرقم والاسم";
     return;
