@@ -24,7 +24,7 @@ async function loadModels() {
     await faceapi.nets.faceRecognitionNet.loadFromUri("./facemodels/");
 
     // تفعيل الزر بعد تحميل النماذج
-    captureBtn.style.display = "inline";
+   
     resultText.innerText = "النماذج جاهزة، يمكنك التقاط بصمة الوجه الآن";
     console.log("النماذج جاهزة");
   } catch (err) {
