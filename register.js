@@ -23,7 +23,7 @@ async function loadModels() {
     await faceapi.nets.faceRecognitionNet.loadFromUri("./facemodels/");
 
   resultText.innerText = "النماذج جاهزة، يمكنك التقاط بصمة الوجه الآن";
-  captureBtn.style.display = "inline";
+ 
 }
 
 // تسجيل بصمة الوجه
