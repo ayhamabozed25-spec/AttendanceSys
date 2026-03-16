@@ -12,12 +12,10 @@ async function loadModels(){
   await faceapi.nets.faceLandmark68Net.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
   await faceapi.nets.faceRecognitionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
   
-  // تفعيل الزر بعد تحميل النماذج
-  
   document.getElementById("result").innerText="النماذج جاهزة، يمكنك التقاط بصمة الوجه الآن";
 }
 
-loadModels();
+
 
 async function captureFace(){
   const empId=document.getElementById("empId").value;
