@@ -13,7 +13,7 @@ async function loadModels(){
   await faceapi.nets.faceRecognitionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
   
   // تفعيل الزر بعد تحميل النماذج
-  captureBtn.disabled=false;
+  
   document.getElementById("result").innerText="النماذج جاهزة، يمكنك التقاط بصمة الوجه الآن";
 }
 
@@ -44,9 +44,9 @@ async function captureFace(){
     method:"POST",
     body:JSON.stringify({
       type:"register",
-      employee:2,
-      name:"aaa",
-      face:[0,0,0,0]
+       employee: empId,
+        name: name,
+        face: faceVector
     })
   });
 
