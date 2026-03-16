@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>تسجيل الموظف</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+</head>
+<body>
+
+<h2>تسجيل الموظف الجديد</h2>
+
+<input id="empId" placeholder="رقم الموظف">
+<input id="name" placeholder="اسم الموظف">
+
+<br><br>
+
+<video id="video" width="260" autoplay></video>
+
+<br><br>
+
+<button onclick="startCamera()">تشغيل الكاميرا</button>
+<button onclick="captureFace()">التقاط بصمة الوجه</button>
+
+<p id="result"></p>
+
+<script src="config.js"></script>
+<script src="register.js"></script>
+
+</body>
+</html>
