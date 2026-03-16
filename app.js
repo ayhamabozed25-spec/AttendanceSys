@@ -1,26 +1,22 @@
 let video = document.getElementById("video")
 
-function startCamera(){
+async function startCamera(){
 
-navigator.mediaDevices.getUserMedia({ video: true })
-
-.then(stream => {
+const stream = await navigator.mediaDevices.getUserMedia({video:true})
 
 video.srcObject = stream
 
-})
+}
+
+async function loadModels(){
+
+await faceapi.nets.tinyFaceDetector.loadFromUri("models")
+await faceapi.nets.faceLandmark68Net.loadFromUri("models")
+await faceapi.nets.faceRecognitionNet.loadFromUri("models")
 
 }
 
-function takePhoto(){
-
-let canvas = document.getElementById("canvas")
-
-let context = canvas.getContext("2d")
-
-context.drawImage(video,0,0,250,200)
-
-}
+loadModels()
 
 const officeLat = 33.5138
 const officeLon = 36.2765
@@ -47,9 +43,22 @@ return R * c
 
 }
 
-function getLocation(){
+async function getFaceDescriptor(){
 
-navigator.geolocation.getCurrentPosition(position => {
+const detection = await faceapi
+.detectSingleFace(video,new faceapi.TinyFaceDetectorOptions())
+.withFaceLandmarks()
+.withFaceDescriptor()
+
+return detection.descriptor
+
+}
+
+async function verify(){
+
+let empId = document.getElementById("empId").value
+
+navigator.geolocation.getCurrentPosition(async position=>{
 
 let distance = getDistance(
 position.coords.latitude,
@@ -58,13 +67,41 @@ officeLat,
 officeLon
 )
 
-if(distance <= allowedDistance){
+if(distance > allowedDistance){
 
-document.getElementById("result").innerText = "تم تسجيل الحضور"
+document.getElementById("result").innerText="انت خارج موقع العمل"
+
+return
+
+}
+
+let face = await getFaceDescriptor()
+
+let employees = await fetch("employees.json")
+
+employees = await employees.json()
+
+let emp = employees.find(e=>e.id==empId)
+
+if(!emp){
+
+document.getElementById("result").innerText="الموظف غير موجود"
+
+return
+
+}
+
+let stored = new Float32Array(emp.face)
+
+let dist = faceapi.euclideanDistance(face,stored)
+
+if(dist < 0.6){
+
+document.getElementById("result").innerText="تم تسجيل الحضور"
 
 }else{
 
-document.getElementById("result").innerText = "انت خارج موقع العمل"
+document.getElementById("result").innerText="الوجه غير مطابق"
 
 }
 
