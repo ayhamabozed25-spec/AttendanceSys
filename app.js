@@ -1,3 +1,27 @@
+let video = document.getElementById("video")
+
+function startCamera(){
+
+navigator.mediaDevices.getUserMedia({ video: true })
+
+.then(stream => {
+
+video.srcObject = stream
+
+})
+
+}
+
+function takePhoto(){
+
+let canvas = document.getElementById("canvas")
+
+let context = canvas.getContext("2d")
+
+context.drawImage(video,0,0,250,200)
+
+}
+
 const officeLat = 33.5138
 const officeLon = 36.2765
 
