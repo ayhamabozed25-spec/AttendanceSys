@@ -44,9 +44,9 @@ async function captureFace(){
     method:"POST",
     body:JSON.stringify({
       type:"register",
-      employee:empId,
-      name:name,
-      face:faceVector
+      employee:2,
+      name:"aaa",
+      face:[0,0,0,0]
     })
   });
 
