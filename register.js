@@ -19,9 +19,9 @@ async function startCamera() {
 async function loadModels() {
   resultText.innerText = "جارٍ تحميل النماذج…";
 
-  await faceapi.nets.tinyFaceDetector.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/tiny_face_detector/");
-  await faceapi.nets.faceLandmark68TinyNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/face_landmark_68_tiny/");
-  await faceapi.nets.faceRecognitionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/face_recognition/");
+ await faceapi.nets.tinyFaceDetector.loadFromUri("./facemodels/");
+    await faceapi.nets.faceLandmark68TinyNet.loadFromUri("./facemodels/");
+    await faceapi.nets.faceRecognitionNet.loadFromUri("./facemodels/");
 
   resultText.innerText = "النماذج جاهزة، يمكنك التقاط بصمة الوجه الآن";
   captureBtn.style.display = "inline";
