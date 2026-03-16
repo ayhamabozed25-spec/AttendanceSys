@@ -2,7 +2,6 @@
 const video = document.getElementById("video");
 const captureBtn = document.getElementById("captureBtn");
 const resultText = document.getElementById("result");
-const API_URL = "YOUR_FIREBASE_FUNCTION_OR_API_URL"; // ضع رابط الـ API هنا
 
 // تشغيل الكاميرا
 async function startCamera() {
