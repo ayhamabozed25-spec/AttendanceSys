@@ -20,7 +20,7 @@ async function loadModels() {
   try {
     // تحميل النماذج من مجلد local على GitHub
     await faceapi.nets.tinyFaceDetector.loadFromUri("./facemodels/");
-    await faceapi.nets.faceLandmark68Net.loadFromUri("./facemodels/");
+    await faceapi.nets.faceLandmark68TinyNet.loadFromUri("./facemodels/");
     await faceapi.nets.faceRecognitionNet.loadFromUri("./facemodels/");
 
     // تفعيل الزر بعد تحميل النماذج
