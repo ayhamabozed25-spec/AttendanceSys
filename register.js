@@ -1,57 +1,78 @@
-let video=document.getElementById("video");
-let captureBtn=document.getElementById("captureBtn");
+// إعداد المتغيرات
+const video = document.getElementById("video");
+const captureBtn = document.getElementById("captureBtn");
+const resultText = document.getElementById("result");
+const API_URL = "YOUR_FIREBASE_FUNCTION_OR_API_URL"; // ضع رابط الـ API هنا
 
-async function startCamera(){
-  let stream=await navigator.mediaDevices.getUserMedia({video:true});
-  video.srcObject=stream;
+// تشغيل الكاميرا
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+  } catch (err) {
+    console.error(err);
+    resultText.innerText = "لا يمكن الوصول إلى الكاميرا";
+  }
 }
 
-async function loadModels(){
-  // روابط CDN موثوقة للنماذج
-  await faceapi.nets.tinyFaceDetector.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
-  await faceapi.nets.faceLandmark68Net.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
-  await faceapi.nets.faceRecognitionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/");
-  
-  document.getElementById("result").innerText="النماذج جاهزة، يمكنك التقاط بصمة الوجه الآن";
+// تحميل النماذج
+async function loadModels() {
+  resultText.innerText = "جارٍ تحميل النماذج…";
+
+  await faceapi.nets.tinyFaceDetector.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/tiny_face_detector/");
+  await faceapi.nets.faceLandmark68TinyNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/face_landmark_68_tiny/");
+  await faceapi.nets.faceRecognitionNet.loadFromUri("https://justadudewhohacks.github.io/face-api.js/models/face_recognition/");
+
+  resultText.innerText = "النماذج جاهزة، يمكنك التقاط بصمة الوجه الآن";
+  captureBtn.style.display = "inline";
 }
 
+// تسجيل بصمة الوجه
+async function captureFace() {
+  const empId = document.getElementById("empId").value;
+  const name = document.getElementById("name").value;
 
-
-async function captureFace(){
-  const empId=document.getElementById("empId").value;
-  const name=document.getElementById("name").value;
-
-  if(!empId || !name){
-    document.getElementById("result").innerText="أدخل الرقم والاسم";
+  if (!empId || !name) {
+    resultText.innerText = "أدخل الرقم والاسم";
     return;
   }
 
-  const detection=await faceapi
-    .detectSingleFace(video,new faceapi.TinyFaceDetectorOptions())
+  const detection = await faceapi
+    .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
     .withFaceLandmarks()
     .withFaceDescriptor();
 
-  if(!detection){
-    document.getElementById("result").innerText="لم يتم التعرف على الوجه. حاول وضع الوجه أمام الكاميرا بشكل واضح";
+  if (!detection) {
+    resultText.innerText = "لم يتم التعرف على الوجه. حاول وضع الوجه أمام الكاميرا بشكل واضح";
     return;
   }
 
-  const faceVector=Array.from(detection.descriptor);
+  const faceVector = Array.from(detection.descriptor);
 
-  const response=await fetch(API_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      type:"register",
-       employee: empId,
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      body: JSON.stringify({
+        type: "register",
+        employee: empId,
         name: name,
         face: faceVector
-    })
-  });
+      }),
+      headers: { "Content-Type": "application/json" }
+    });
 
-  const result=await response.json();
-  if(result.status==="ok"){
-    document.getElementById("result").innerText="تم تسجيل الموظف بنجاح";
-  }else{
-    document.getElementById("result").innerText="خطأ: "+result.error;
+    const result = await response.json();
+    resultText.innerText = result.status === "ok"
+      ? "تم تسجيل الموظف بنجاح"
+      : "خطأ: " + result.error;
+  } catch (err) {
+    console.error(err);
+    resultText.innerText = "حدث خطأ أثناء تسجيل الموظف";
   }
 }
+
+// بدء التطبيق بعد تحميل DOM
+window.addEventListener("DOMContentLoaded", async () => {
+  await loadModels();
+  await startCamera();
+});
