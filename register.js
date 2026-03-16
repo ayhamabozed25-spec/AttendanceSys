@@ -1,7 +1,7 @@
 // إعداد المتغيرات
 const video = document.getElementById("video");
 const captureBtn = document.getElementById("captureBtn");
-const resultText = document.getElementById("result");
+const resultText = document.getElementById("resultText");
 
 // تشغيل الكاميرا
 async function startCamera() {
