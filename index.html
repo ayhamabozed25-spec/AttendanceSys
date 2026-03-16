@@ -2,32 +2,28 @@
 <html>
 
 <head>
-<title>Attendance</title>
+
+<title>Attendance System</title>
+
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+
 </head>
 
 <body>
 
 <h2>تسجيل الحضور</h2>
 
-<input id="name" placeholder="اسم الموظف">
+<input id="empId" placeholder="رقم الموظف">
 
 <br><br>
 
-<video id="video" width="250" autoplay></video>
+<video id="video" width="250" height="200" autoplay></video>
 
 <br><br>
 
 <button onclick="startCamera()">تشغيل الكاميرا</button>
 
-<button onclick="takePhoto()">التقاط سيلفي</button>
-
-<br><br>
-
-<canvas id="canvas" width="250"></canvas>
-
-<br><br>
-
-<button onclick="getLocation()">تسجيل الحضور</button>
+<button onclick="verify()">التحقق وتسجيل الحضور</button>
 
 <p id="result"></p>
 
