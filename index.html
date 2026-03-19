@@ -29,12 +29,32 @@
 
 <p id="result"></p>
 
+   <script type="module">
+  
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+ 
+  const firebaseConfig = {
+    apiKey: "AIzaSyA7qW5bjTPQA0q9XgKd6OHDzaNCDbtz2z0",
+    authDomain: "firestore-1488a.firebaseapp.com",
+    databaseURL: "https://firestore-1488a-default-rtdb.firebaseio.com",
+    projectId: "firestore-1488a",
+    storageBucket: "firestore-1488a.firebasestorage.app",
+    messagingSenderId: "284773652304",
+    appId: "1:284773652304:web:f379106224b0570b91fe55",
+    measurementId: "G-FZJMJ7RPGT"
+  };
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
 <script src="config.js"></script>
 <script src="app.js"></script>
 <script>
   function goToRegister(){
   window.location.href = "register.html";
 }</script>
+ 
 </body>
 
 </html>
